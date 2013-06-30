@@ -5,11 +5,11 @@ defmodule ClientAccount do
 Provides a Account implementation with defining the implicit context using records.
 """
 # Account.create do
-#     number "CL-BXT-23765"
+#     number  "CL-BXT-23765"
 #     holders "John Doe", "Phil McCay"
 #     address "San Francisco"
-#     type "client"
-#     email "client@example.com"
+#     type    "client"
+#     email   "client@example.com"
 # end.save.and_then do |a|
 #                       Registry.register(a)
 #                       Mailer.new
@@ -23,7 +23,7 @@ Provides a Account implementation with defining the implicit context using recor
 
     defrecord Account, [number: nil, holders: nil, address: nil, type: nil, email: nil] do
         def create(block) do
-            Account.new(block)
+            Account.new block
         end
         def save(self) do
             IO.puts ">> Save #{self.number}"
@@ -50,7 +50,7 @@ defmodule Registry do
 
 end
 
-
+###############################################################################
 alias ClientAccount.Account
 alias Registry.Mailer
 
@@ -59,16 +59,16 @@ a = Account.create(number:  "CL-BXT-23765",
                    address: "San Francisco",
                    type:    "client",
                    email:   "client@example.com")
-.save.and_then (function do 
-                    a ->
-                    Registry.register(a)
-                    Mailer.new()
-                    .to(a.email)
-                    .cc(a.email)
-                    .subj("New Account Creation")
-                    .body("Client account created for #{a.number}")
-                    .send
-                end)
+.save .and_then (function do 
+                     a ->        # same as block in Ruby - end.save.and_then do |a| .. end
+                     Registry.register(a)
+                     Mailer.new
+                     .to( a.email )
+                     .cc( a.email )
+                     .subj( "New Account Creation" )
+                     .body( "Client account created for #{a.number}" )
+                     .send
+                 end)
 
 IO.puts ">> Inspect #{inspect a}"
 

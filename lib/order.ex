@@ -10,7 +10,6 @@ newOrder.to.buy(100.shares.of('IBM')) {
     valueAs {qty, unitPrice -> qty * unitPrice - 500}
 }
 
-
 """
     
     defrecord :order, security: nil, quantity: 0, limitPrice: 0, allOrNone: nil, value: 0,  bs: ""
