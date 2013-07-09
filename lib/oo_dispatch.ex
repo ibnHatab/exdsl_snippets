@@ -9,6 +9,7 @@ defrecord Company, [
                     name: nil, employees: HashDict.new, autoid: 1
     ] do
 
+    # modification API
     def add_employee(employee, this) do
         this.
         store_employee(employee.id(this.autoid)).
@@ -19,8 +20,6 @@ defrecord Company, [
         this.
         update_employees(HashDict.put(&1, employee.id, employee))
     end
-
-    def get_employee(id, this), do: Dict.get(this.employees, id)
 
     def update_employee(id, update_fun, this) do
         this.get_employee(id)
@@ -33,7 +32,10 @@ defrecord Company, [
         |> this.store_employee
     end
 
-    def select(pred, this) do        
+    # access API
+    def get_employee(id, this), do: Dict.get(this.employees, id)
+
+    def select_employee(pred, this) do        
         lc {k, e} inlist (HashDict.to_list this.employees), pred.(e), do: k
     end
     
@@ -71,7 +73,7 @@ c = Enum.reduce(
 # Higher order messages in a nutshell. 
 IO.puts ">========================================"
 
-c.select( fn e -> e.salary > 10000 end ) 
+c.select_employee( fn e -> e.salary > 10000 end ) 
 |> Enum.map(c.get_employee(&1)) 
 |> IO.inspect
 
